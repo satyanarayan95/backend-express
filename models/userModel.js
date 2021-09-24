@@ -1,25 +1,29 @@
-const  mongoose= require("mongoose");
-const db =require("../secret")
-
-const validator =require('email-validator');
-
-mongoose.connect(db.link).then(()=>{
-    console.log("DB connected");
+const mongoose=require('mongoose');
+const db_link=require('../secrets');
+const validator = require("email-validator");
+mongoose.connect(db_link).then(function(db){
+    // console.log(db);
+    console.log('db connected');
 })
-.catch((err)=>{
-    console.log("error occured while connecting :",err);
-})
+.catch(function(err){
+    console.log(err);
+});
 
-const userSchema = mongoose.Schema({
+const userSchema=new mongoose.Schema({
     name:{
         type:String,
-        required:true,
+        required:true
+    },
+    age:{
+        type:Number
     },
     email:{
         type:String,
         required:true,
         unique:true,
-        
+        validate:function(){
+            return validator.validate(this.email);
+        }
     },
     password:{
         type:String,
@@ -31,21 +35,21 @@ const userSchema = mongoose.Schema({
         required:true,
         min:8,
         validate:function(){
-            return this.password === this.confirmPassword;
+            return this.password==this.confirmPassword
         }
-    },
-})
+    }
+});
 
+const userModel=mongoose.model('userModel',userSchema);
 
-const userModel = mongoose.model('userModel',userSchema);
-
-(async function createUSer(){
-    let user = {
-        name:'Satya',
-        email:'abcd@gmail.com',
-        password:'123456780',
-        confirmPassword:'123456780'
+(async function createUser(){
+    let user={
+        name:'Abhi',
+        age:20,
+        // email:'abc@gmail.com',
+        password:'12345678',
+        confirmPassword:'12345678'
     };
-    let userObj = await userModel.create(user);
+    let userObj=await userModel.create(user);
     console.log(userObj);
 })();
