@@ -8,9 +8,13 @@ app.listen('5000',function(){
 });
 
 app.use(express.json());
+app.use(express.static('public'));
 
 const userRouter=express.Router();
+const authRouter=express.Router();
+
 app.use('/user',userRouter);
+app.use('/auth',authRouter)
 //mounting in express
 userRouter
 .route('/')
@@ -23,7 +27,27 @@ userRouter
 .route('/:id')
 .get(getUserById);
 
-let user={};
+authRouter
+.route('/signup')
+.post(signupUser);
+
+function signupUser(req,res){
+    // let userDetails=req.body;
+    // let name=userDetails.name;
+    // let email=userDetails.email;
+    // let password=userDetails.password;
+
+    let{email,name,password}=req.body;
+    user.push({email,name,password});
+    console.log('user',req.body);
+    res.json({
+        message:'user signedUp',
+        user:req.body
+    });
+}
+
+let user=[];
+
 // client <- server
 app.get('/',(req,res)=>{
     res.send('Home Page');
