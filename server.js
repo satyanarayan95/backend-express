@@ -31,6 +31,17 @@ authRouter
 .route('/signup')
 .post(signupUser);
 
+//redirects
+app.get('/user-all',(req,res)=>{
+    res.redirect('/user');
+});
+
+//404 page
+app.use((req,res)=>{
+    res.sendFile('public/404.html',{root:__dirname})
+});
+
+
 function signupUser(req,res){
     // let userDetails=req.body;
     // let name=userDetails.name;
