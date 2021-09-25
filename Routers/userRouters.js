@@ -1,10 +1,13 @@
 const express=require('express');
 const userRouter=express.Router();
+
+const userModel=require('../models/userModel');
+
 //routes
 
 userRouter
 .route('/')
-.get(getUser)
+.get(getUsers)
 .post(createUser)
 .patch(updateUser)
 .delete(deleteUser);
@@ -14,10 +17,24 @@ userRouter
 .get(getUserById);
 
 //functions
-async function getUser(req,res){
-    console.log('getUser called');
-    res.json(user);  
-}
+async function getUsers(req,res){
+    try{
+        console.log('getUser called');
+        let users=await userModel.find();
+        if(users){
+            return res.json(users); 
+        }
+        else{
+            return res.json({
+                message:'users not found'
+            });
+        }
+    }
+    catch(err){
+        return res.json({
+            message:err.message
+        });
+    }
 
 //post request
 // client-> server 
